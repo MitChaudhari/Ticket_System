@@ -16,51 +16,89 @@ public class Login extends JFrame {
     public Login() {
         super("IIT HELP DESK LOGIN");
         conn = new Dao();
-        //conn.createTables(); // You should call createTables only once, not every time you create a Login object.
-        
-        setLayout(new GridBagLayout()); // Set the layout to GridBagLayout
-        
-        // Set window to open in maximized state
-        setExtendedState(JFrame.MAXIMIZED_BOTH); 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // Ensure the application exits when the window is closed
-       
+        // conn.createTables(); // You should call createTables only once.
+
+        setExtendedState(JFrame.MAXIMIZED_BOTH);
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+        // Set up a gradient background panel
+        JPanel backgroundPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                int width = getWidth();
+                int height = getHeight();
+                Color color1 = new Color(106, 116, 145);
+                Color color2 = new Color(58, 63, 70);
+                GradientPaint gp = new GradientPaint(0, 0, color1, 0, height, color2);
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, width, height);
+            }
+        };
+        setContentPane(backgroundPanel);
+        backgroundPanel.setLayout(new GridBagLayout());
+
         GridBagConstraints constraints = new GridBagConstraints();
         constraints.fill = GridBagConstraints.HORIZONTAL;
-        constraints.insets = new Insets(10, 10, 10, 10); // Padding
+        constraints.insets = new Insets(10, 10, 10, 10);
 
-        // SET UP CONTROLS
-        JLabel lblUsername = new JLabel("Username:");
-        JLabel lblPassword = new JLabel("Password:");
-        JLabel lblStatus = new JLabel(" ", JLabel.CENTER);
-        JTextField txtUname = new JTextField(10);
-        JPasswordField txtPassword = new JPasswordField();
-        JButton btn = new JButton("Submit");
-        JButton btnExit = new JButton("Exit");
+        // Card-like panel for the login form
+        JPanel loginPanel = new JPanel();
+        loginPanel.setLayout(new GridBagLayout());
+        loginPanel.setBackground(new Color(0, 0, 0, 80)); // Semi-transparent
+        loginPanel.setBorder(BorderFactory.createEmptyBorder(30, 60, 30, 60));
 
-        lblStatus.setToolTipText("Contact help desk to unlock password");
-        
-        // ADD OBJECTS TO FRAME
+        // Adjust constraints for the components inside the login panel
         constraints.gridx = 0;
         constraints.gridy = 0;
-        add(lblUsername, constraints);
+        loginPanel.add(new JLabel("Username:"), constraints);
 
+        JTextField txtUname = new JTextField(15);
         constraints.gridx = 1;
         constraints.gridy = 0;
-        add(txtUname, constraints);
+        loginPanel.add(txtUname, constraints);
 
         constraints.gridx = 0;
         constraints.gridy = 1;
-        add(lblPassword, constraints);
+        loginPanel.add(new JLabel("Password:"), constraints);
 
+        JPasswordField txtPassword = new JPasswordField(15);
         constraints.gridx = 1;
         constraints.gridy = 1;
-        add(txtPassword, constraints);
+        loginPanel.add(txtPassword, constraints);
 
+        JButton btnLogin = new JButton("Login");
         constraints.gridx = 0;
         constraints.gridy = 2;
         constraints.gridwidth = 2;
         constraints.anchor = GridBagConstraints.CENTER;
-		btn.addActionListener(new ActionListener() {
+        loginPanel.add(btnLogin, constraints);
+
+        JCheckBox rememberMe = new JCheckBox("Remember me");
+        constraints.gridx = 0;
+        constraints.gridy = 3;
+        loginPanel.add(rememberMe, constraints);
+
+        JLabel lblForgotPassword = new JLabel("Forgot Password?");
+        constraints.gridx = 1;
+        constraints.gridy = 3;
+        loginPanel.add(lblForgotPassword, constraints);
+
+        JLabel lblStatus = new JLabel(" ", JLabel.CENTER);
+        lblStatus.setForeground(Color.RED);
+        constraints.gridx = 0;
+        constraints.gridy = 4;
+        constraints.gridwidth = 2;
+        loginPanel.add(lblStatus, constraints);
+
+        // Add the login panel to the background panel
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.gridwidth = 1;
+        constraints.anchor = GridBagConstraints.CENTER;
+        backgroundPanel.add(loginPanel, constraints);
+        btnLogin.addActionListener(new ActionListener() {
 			int count = 0; // count agent
 
 			@Override
@@ -90,24 +128,10 @@ public class Login extends JFrame {
 		});
 
 
-        add(btn, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 3;
-        constraints.gridwidth = 2;
-        btnExit.addActionListener(e -> System.exit(0));
-        add(btnExit, constraints);
-
-        constraints.gridx = 0;
-        constraints.gridy = 4;
-        constraints.gridwidth = 2;
-        lblStatus.setForeground(Color.RED); // Set the text color of status messages to red
-        add(lblStatus, constraints);
-
+        add(btnLogin);
 
         setVisible(true); // SHOW THE FRAME
     }
-
 
 	public static void main(String[] args) {
 
